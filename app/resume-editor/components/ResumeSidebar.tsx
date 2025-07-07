@@ -25,6 +25,7 @@ const ResumeSidebar = ({
       {/* Content */}
       {activeTab === 'Editor' && (
         <EditorPanel
+          sectionKey={activeTab}
           resumeData={resumeData}
           setResumeData={setResumeData}
           expandedSections={expandedSections}

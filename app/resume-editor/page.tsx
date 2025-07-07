@@ -13,7 +13,7 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import {CSS} from '@dnd-kit/utilities';
-import { Download, User, GraduationCap, Briefcase, FolderOpen, Code2, Trophy } from 'lucide-react';
+import { Download, User, GraduationCap, Briefcase, FolderOpen, Code2, Trophy, Plus } from 'lucide-react';
 import EditorPanel from './components/editor/EditorPanel';
 
 const SECTION_CONFIG = [
@@ -25,7 +25,7 @@ const SECTION_CONFIG = [
   { key: 'leadership', label: 'Leadership', icon: Trophy },
 ];
 
-function SortableSidebarItem({ id, label, icon: Icon, active, listeners, attributes, setNodeRef, style, onClick }) {
+function SortableSidebarItem({ id, label, icon: Icon, active, listeners, attributes, setNodeRef, style, onClick }: { id: string, label: string, icon: React.ElementType, active: boolean, listeners: any, attributes: any, setNodeRef: any, style: any, onClick: () => void }) {
   return (
     <div
       ref={setNodeRef}
@@ -46,7 +46,7 @@ const ResumeEditorPage = () => {
   const [sectionOrder, setSectionOrder] = useState(SECTION_CONFIG.map(s => s.key));
   const [activeSection, setActiveSection] = useState('personalInfo');
   const [expandedSections, setExpandedSections] = useState(() => {
-    const obj = {};
+    const obj: Record<string, boolean> = {};
     SECTION_CONFIG.forEach(s => { obj[s.key] = true; });
     return obj;
   });
@@ -77,7 +77,7 @@ const ResumeEditorPage = () => {
           location: user?.user_metadata?.location || '',
           phone: user?.user_metadata?.phone || '',
           email: user?.email || '',
-          linkedin: user?.user_metadata?.linkedin || '',
+          linkedin: user?.user_metadata?.linkedin || '',  // TODO: Add linkedin
           github: user?.user_metadata?.github || '',
         },
         education: education.map((e: any) => ({
@@ -85,7 +85,7 @@ const ResumeEditorPage = () => {
           degree: e.degree,
           dates: `${e.startDate} - ${e.endDate || 'Present'}`,
           gpa: e.gpa?.toString() || '',
-          achievements: '', // Map if you have this field
+          achievements: '', // TODO: Add achievements
         })),
         experience: experience.map((e: any) => ({
           company: e.company,
@@ -96,7 +96,7 @@ const ResumeEditorPage = () => {
         })),
         projects: projects.map((p: any) => ({
           name: p.name,
-          dates: '', // Add if you have project dates
+          dates: '', // TODO: Add project dates
           description: p.description,
         })),
         skills: {
@@ -104,7 +104,7 @@ const ResumeEditorPage = () => {
           tools: skillsArr.filter((s: any) => s.category === 'Tools').map((s: any) => s.name).join(', '),
           other: skillsArr.filter((s: any) => s.category === 'Other').map((s: any) => s.name).join(', '),
         },
-        leadership: [], // Fill if you have this data
+        leadership: [], // TODO: Add leadership
       });
     };
 
@@ -112,7 +112,7 @@ const ResumeEditorPage = () => {
   }, []);
 
   // DnD-kit handlers
-  function handleDragEnd(event) {
+  function handleDragEnd(event: any) {
     const { active, over } = event;
     if (active.id !== over.id) {
       setSectionOrder((items) => {
@@ -136,8 +136,8 @@ const ResumeEditorPage = () => {
                 <SortableSidebarSection
                   key={key}
                   id={key}
-                  label={section.label}
-                  icon={section.icon}
+                  label={section?.label}
+                  icon={section?.icon}
                   active={activeSection === key}
                   onClick={() => setActiveSection(key)}
                 />
@@ -149,12 +149,16 @@ const ResumeEditorPage = () => {
           <Download className="w-5 h-5" />
           Export PDF
         </button>
+        <button className="mt-4 w-full border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-gray-400 hover:text-gray-600 flex items-center justify-center gap-2 py-3">
+          <Plus size={18} />
+          Add New Section
+        </button>
       </aside>
     );
   }
 
   // Sortable sidebar section
-  function SortableSidebarSection(props) {
+  function SortableSidebarSection(props: any) {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: props.id });
     const style = {
       transform: CSS.Transform.toString(transform),
@@ -173,9 +177,9 @@ const ResumeEditorPage = () => {
             key={key}
             sectionKey={key}
             resumeData={resumeData}
-            setResumeData={setResumeData}
-            isExpanded={expandedSections[key]}
-            onToggle={() => setExpandedSections(prev => ({ ...prev, [key]: !prev[key] }))}
+            setResumeData={setResumeData as React.Dispatch<React.SetStateAction<ResumeData | undefined>>  }
+            expandedSections={expandedSections}
+            toggleSection={() => setExpandedSections(prev => ({ ...prev, [key]: !prev[key as keyof typeof prev] }))}
           />
         ))}
       </div>

@@ -6,13 +6,14 @@ import PersonalInfoEditor from './PersonalInfoEditor';
 import EditorSectionStub from './EditorSectionStub'; // Placeholder for other sections
 
 interface EditorPanelProps {
+  sectionKey: string;
   resumeData: ResumeData | null;
   setResumeData: React.Dispatch<React.SetStateAction<ResumeData | undefined>>;
   expandedSections: any;
   toggleSection: (section: any) => void;
 }
 
-const EditorPanel = ({ resumeData, setResumeData, expandedSections, toggleSection }: EditorPanelProps) => {
+const EditorPanel = ({ sectionKey, resumeData, setResumeData, expandedSections, toggleSection }: EditorPanelProps) => {
   return (
     <div className="p-4">
       {/* Editor Sections */}
