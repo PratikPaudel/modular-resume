@@ -1,0 +1,149 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id    String @id @default(cuid())
+  email String @unique
+  name  String?
+
+  // Master data that belongs to the user
+  baseExperiences Experience[]
+  baseProjects    Project[]
+  baseEducations  Education[]
+  baseSkills      Skill[]
+
+  // All the generated resume variants
+  resumes Resume[]
+}
+
+// --- BASE COMPONENT MODELS (The Master Database) ---
+
+model Experience {
+  id          String    @id @default(cuid())
+  company     String
+  title       String
+  location    String?
+  startDate   DateTime
+  endDate     DateTime?
+  bullets     String[]
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Project {
+  id          String    @id @default(cuid())
+  name        String
+  description String
+  projectUrl  String?
+  stack       String[]
+  bullets     String[]
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Education {
+  id          String    @id @default(cuid())
+  institution String
+  degree      String
+  gpa         Float?
+  startDate   DateTime
+  endDate     DateTime?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Skill {
+  id       String @id @default(cuid())
+  name     String
+  category String // e.g., "Languages", "Frameworks", "DevOps"
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+
+// --- RESUME INSTANCE MODELS (The Tailored Copies) ---
+
+model Resume {
+  id        String   @id @default(cuid())
+  title     String   @default("Untitled Resume")
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // A resume is composed of a list of specific item instances
+  experienceItems ExperienceItem[]
+  projectItems    ProjectItem[]
+  educationItems  EducationItem[]
+  skillItems      SkillItem[]
+}
+
+// This is a snapshot of an Experience for ONE specific resume
+model ExperienceItem {
+  id        String    @id @default(cuid())
+  order     Int // For drag-and-drop reordering
+
+  // Denormalized/copied data
+  company   String
+  title     String
+  location  String?
+  startDate DateTime
+  endDate   DateTime?
+  bullets   String[]
+
+  resumeId String
+  resume   Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+}
+
+// Define similar "Item" models for projects, education, and skills.
+// They hold a copy of the data at the time of resume creation.
+
+model ProjectItem {
+  id          String    @id @default(cuid())
+  order       Int
+  name        String
+  description String
+  projectUrl  String?
+  stack       String[]
+  bullets     String[]
+
+  resumeId String
+  resume   Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+}
+
+model EducationItem {
+  id          String    @id @default(cuid())
+  order       Int
+  institution String
+  degree      String
+  gpa         Float?
+  startDate   DateTime
+  endDate     DateTime?
+
+  resumeId String
+  resume   Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+}
+
+model SkillItem {
+  id       String @id @default(cuid())
+  order    Int
+  name     String
+  category String
+
+  resumeId String
+  resume   Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+}
