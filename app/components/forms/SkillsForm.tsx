@@ -48,23 +48,9 @@ export default function SkillsForm({ initialData = {}, onSave, onCancel }: Skill
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      const response = await fetch('/api/skills', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-      
-      if (response.ok) {
-        const newSkills = await response.json();
-        // The API now returns an array of skills, so we pass the first one for compatibility
-        onSave(newSkills[0] || newSkills);
-      }
-    } catch (error) {
-      console.error('Error saving skills:', error);
-    }
+    onSave(formData);
   };
 
   return (

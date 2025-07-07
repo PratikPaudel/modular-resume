@@ -48,9 +48,10 @@ model Project {
   projectUrl  String?
   stack       String[]
   bullets     String[]
+  userId      String
+  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([name, userId])
 }
 
 model Education {

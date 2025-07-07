@@ -7,6 +7,9 @@ export interface PersonalInfo {
     email: string;
     linkedin: string;
     github: string;
+    picture?: string;
+    headline?: string;
+    url?: string;
   }
   
   export interface EducationEntry {

@@ -25,6 +25,8 @@ interface ProjectFormProps {
 }
 
 export default function ProjectForm({ initialData = {}, onSave, onCancel }: ProjectFormProps) {
+  console.log('ProjectForm initialData:', initialData); // Debug log
+  
   const [formData, setFormData] = useState<ProjectData>({
     title: initialData.title || '',
     description: initialData.description || '',
@@ -37,7 +39,7 @@ export default function ProjectForm({ initialData = {}, onSave, onCancel }: Proj
     highlights: initialData.highlights || [''],
     teamSize: initialData.teamSize || '',
     role: initialData.role || '',
-    ...initialData
+    id: initialData.id
   });
 
   const addHighlight = () => {
@@ -62,22 +64,9 @@ export default function ProjectForm({ initialData = {}, onSave, onCancel }: Proj
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      const response = await fetch('/api/project', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-      
-      if (response.ok) {
-        const newProject = await response.json();
-        onSave(newProject);
-      }
-    } catch (error) {
-      console.error('Error saving project:', error);
-    }
+    onSave(formData); // Only call onSave, no fetch here!
   };
 
   return (

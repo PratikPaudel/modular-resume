@@ -38,26 +38,13 @@ export default function EducationForm({ initialData = {}, onSave, onCancel }: Ed
     ...initialData
   });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      const response = await fetch('/api/education', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-      
-      if (response.ok) {
-        const newEducation = await response.json();
-        onSave(newEducation);
-      }
-    } catch (error) {
-      console.error('Error saving education:', error);
-    }
+    onSave(formData);
   };
 
   return (
-    <div className="bg-white border rounded-lg p-6 shadow-sm">
+    <div className="bg-white border rounded-lg p-6 shadow-sm w-full">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold flex items-center gap-2">
           <GraduationCap className="w-5 h-5" />

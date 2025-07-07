@@ -58,22 +58,9 @@ export default function ExperienceForm({ initialData = {}, onSave, onCancel }: E
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      const response = await fetch('/api/experience', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-      
-      if (response.ok) {
-        const newExperience = await response.json();
-        onSave(newExperience);
-      }
-    } catch (error) {
-      console.error('Error saving experience:', error);
-    }
+    onSave(formData);
   };
 
   return (
@@ -173,18 +160,7 @@ export default function ExperienceForm({ initialData = {}, onSave, onCancel }: E
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Job Description</label>
-          <textarea
-            value={formData.description}
-            onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            rows={3}
-            placeholder="Brief description of your role and responsibilities..."
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-2">Key Achievements</label>
+          <label className="block text-sm font-medium mb-2">Bullet Points</label>
           {(formData.achievements || []).map((achievement, index) => (
             <div key={index} className="flex gap-2 mb-2">
               <input

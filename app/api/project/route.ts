@@ -34,12 +34,21 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    console.log('Received project data:', body); // Debug log
     
     const userId = await getAuthenticatedUserId();
     if (!userId) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
+      );
+    }
+
+    // Validate required fields
+    if (!body.title || !body.description) {
+      return NextResponse.json(
+        { error: 'Title and description are required' },
+        { status: 400 }
       );
     }
 
@@ -52,6 +61,8 @@ export async function POST(request: NextRequest) {
       bullets: body.highlights || [],
       userId
     };
+
+    console.log('Transformed project data:', projectData); // Debug log
 
     const project = await prisma.project.create({
       data: projectData
@@ -71,7 +82,19 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
+    console.log('PUT request body:', body); // Debug log
+    
     const { id, ...updateData } = body;
+    console.log('PUT updateData:', updateData); // Debug log
+
+    // Validate required fields
+    if (!updateData.title || !updateData.description) {
+      console.log('Validation failed - missing title or description'); // Debug log
+      return NextResponse.json(
+        { error: 'Title and description are required' },
+        { status: 400 }
+      );
+    }
 
     // Transform the data to match Prisma schema
     const projectData = {
