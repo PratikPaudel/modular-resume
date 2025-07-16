@@ -6,15 +6,19 @@ A personalized, component-based resume builder to streamline job applications an
 
 The application is a fully functional resume builder with the following features:
 
-### ✅ Implemented Features
-- **User Authentication**: Sign up, login, and user management with Supabase
-- **Modular Resume Sections**: Custom + Standard resume headings.
-- **Drag & Drop Interface**: Reorder resume sections, & subsections with intuitive drag and drop
-- **Real-time Preview**: Live preview of your resume as you edit
-- **Collapsible Editor Panels**: Clean, organized editing interface
-- **Responsive Design**: Works on desktop and mobile devices
-- **Data Persistence**: All data is saved to Supabase database for each users. Properly authenticated. 
+### ✅ Implemented Features + WIP
 
+- **Auth0 Authentication**: Secure sign-up, login, and user session management
+- **Airtable-Powered Resume Data**: Store all your resume content (projects, work experience, education, skills, etc.) in Airtable
+- **Drag & Drop Interface**: Rearrange resume sections and items effortlessly
+- **Live Resume Preview**: See changes instantly as you edit
+- **AI Assistant**:
+  - Generate or rewrite resume bullet points
+  - Tailor resume to specific job descriptions
+  - Summarize long content clearly
+- **Modular Layout System**: Add/remove/reorder resume components like LEGO blocks
+- **Responsive Design**: Works great on mobile and desktop
+- **Instant Export**: Export resumes as PDF, HTML, or Markdown
 
 ## 📸 Screenshots
 
@@ -26,30 +30,43 @@ The application is a fully functional resume builder with the following features
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: Next.js 15, React 19, TypeScript, dnd-kit, Tailwind CSS 4, Radix UI components, Shadcn UI.
-- **Database**: Supabase (PostgreSQL), Supabase Auth, Prisma client.
+- **Frontend**:  
+  `Next.js 15`, `React 19`, `TypeScript`, `Tailwind CSS 4`, `dnd-kit`, `Radix UI`, `shadcn/ui`
+- **Authentication**:  
+  `Auth0`
+- **Data Source**:  
+  `Airtable` (your single source of truth for resume content)
+- **AI Assistant**:  
+  `OpenAI GPT-4` (for summaries, rewrites, bullet generation)
 
-3. **Set up environment variables**
-   Create a `.env.local` file with your Supabase credentials:
-   ```env
-   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-   ```
+---
 
-4. **Set up the database**
-   ```bash
-   npx prisma generate
-   npx prisma db push
-   ```
+## ⚙️ Getting Started
 
-5. **Run the development server**
-   ```bash
-   npm run dev
-   ```
+### 1. Clone the repo & install
 
-6. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
+```bash
+git clone https://github.com/PratikPaudel/modular-resume.git
+cd modular-resume
+npm install
+```
+
+2. Environment Variables
+
+Create a .env.local file and include:
+
+# Airtable
+AIRTABLE_API_KEY=your_airtable_api_key
+AIRTABLE_BASE_ID=your_airtable_base_id
+
+# OpenAI
+OPENAI_API_KEY=your_openai_api_key
+
+# Auth0
+AUTH0_DOMAIN=your-auth0-domain
+AUTH0_CLIENT_ID=your-auth0-client-id
+AUTH0_CLIENT_SECRET=your-auth0-client-secret
+AUTH0_REDIRECT_URI=http://localhost:3000/api/auth/callback
 
 ## 📋 Future Todos
 
