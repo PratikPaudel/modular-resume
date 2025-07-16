@@ -2,6 +2,10 @@
 
 A personalized, component-based resume builder to streamline job applications and generate export-ready resumes in seconds.
 
+## 🗺️ Architecture Diagram
+
+![Architecture Diagram](./Architecture-Diagram.png)
+
 ## 🚀 Current State
 
 The application is a fully functional resume builder with the following features:
